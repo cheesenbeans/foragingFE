@@ -1,3 +1,8 @@
+import axios from "axios";
+const foragingApi = axios.create({
+	baseURL: "https://vgk9m0b765.execute-api.eu-west-1.amazonaws.com",
+});
+
 export const fetchItems = (params) => {
   let items = [];
   if (!params) {
@@ -254,12 +259,9 @@ export const postComment = (resource_id, body, username) => {
   console.log(newComment);
 };
 
-export const postResource = (body) => {
-if(body){
-  return Promise.resolve(console.log(body))
+export const postResource = (formData) => {
+  console.log(formData);
 
-}else {
-  return Promise.reject()
-}
-
+ return foragingApi.post("/api/resources", formData, { headers: {'Content-Type': 'multipart/form-data'}}).catch(error=> console.log(error))
+// return foragingApi.post("/api/resources").then((data)=>{console.log(data.data.spots.Items)}).catch(error=> console.log(error))
 }

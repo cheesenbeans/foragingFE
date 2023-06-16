@@ -33,15 +33,17 @@ export const AddNewResource = ({ route }) => {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude
       },
-      image,
+      
       created_at: new Date(location.timestamp).toUTCString()
-
-
     }
+    const formData = new FormData();
+    formData.append("image", image)
+    // formData.append("resource", body)
+   
 
 
   
-    postResource(body).catch(()=>{
+    postResource(formData).catch(()=>{
       setSubmitError("Sorry resource was not submitted, please restart the app and try again!")
 
     })
