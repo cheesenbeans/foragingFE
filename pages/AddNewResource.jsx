@@ -8,47 +8,38 @@ import { UserContext } from "../contexts/UserContext";
 import BackButton from "../components/BackButton";
 
 export const AddNewResource = ({ route }) => {
-  const [submitError, setSubmitError] = useState(null)
+  const [submitError, setSubmitError] = useState(null);
 
   const abundanceValues = ["depleted", "low", "medium", "high", "abundant"];
-  const {image, location} = route.params
+  const { image, location } = route.params;
 
-  const{user: username} = useContext(UserContext)
-  
+  const { user: username } = useContext(UserContext);
 
-
-
-  const handleSubmit = ({resource_name,
+  const handleSubmit = ({
+    resource_name,
     description,
     condition,
-    depletion}) => {
-
-    const body = { 
-      resource_name,
-      description,
-      condition,
-      depletion,
-      username,
-      location:{
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude
-      },
-      
-      created_at: new Date(location.timestamp).toUTCString()
-    }
+    depletion,
+  }) => {
     const formData = new FormData();
-    formData.append("image", image)
+    formData.append("image", image);
+    formData.append("resource_name", resource_name);
+    formData.append("description", description);
+    formData.append("condition", condition);
+    formData.append("depletion", depletion);
+    formData.append("username", username);
+    formData.append("latitude", location.coords.latitude);
+    formData.append("longitude", location.coords.longitude);
+    formData.append("created_at", new Date(location.timestamp).toUTCString());
+
     // formData.append("resource", body)
-   
 
-
-  
-    postResource(formData).catch(()=>{
-      setSubmitError("Sorry resource was not submitted, please restart the app and try again!")
-
-    })
+    postResource(formData).catch(() => {
+      setSubmitError(
+        "Sorry resource was not submitted, please restart the app and try again!"
+      );
+    });
   };
-
 
   return (
     <View style={styles.container}>
@@ -57,7 +48,7 @@ export const AddNewResource = ({ route }) => {
         <Text>Add new resource</Text>
       </View>
       <View style={styles.imageContainer}>
-      <Image source={{ uri: image }} style={styles.image} />
+        <Image source={{ uri: image.uri }} style={styles.image} />
       </View>
       <View style={styles.formContainer}>
         <Formik
@@ -77,7 +68,7 @@ export const AddNewResource = ({ route }) => {
             setFieldValue,
           }) => (
             <>
-            <Text>Name of Forageable resource</Text>
+              <Text>Name of Forageable resource</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Name"
@@ -113,7 +104,7 @@ export const AddNewResource = ({ route }) => {
                 }}
                 step={1}
               />
-              {submitError && <Text style={styles.error} >{submitError}</Text>}
+              {submitError && <Text style={styles.error}>{submitError}</Text>}
               <Button onPress={handleSubmit} title="Submit" />
             </>
           )}
@@ -168,6 +159,6 @@ const styles = StyleSheet.create({
     contentFit: "contain",
   },
   error: {
-color: '#f44336'
-  }
+    color: "#f44336",
+  },
 });

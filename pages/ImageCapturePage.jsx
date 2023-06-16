@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Text ,Button, View, StyleSheet } from "react-native";
+import { Text, Button, View, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { Camera, CameraType } from "expo-camera";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 import BackButton from "../components/BackButton";
 
 export const ImageCapturePage = ({ navigation }) => {
-
   const [imageUri, setImageUri] = useState(null);
-  const [location, setLocation ] = useState(null)
+  const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-
 
   useEffect(() => {
     (async () => {
-      
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
         return;
       }
 
@@ -27,7 +24,7 @@ export const ImageCapturePage = ({ navigation }) => {
     })();
   }, []);
 
-  let text = 'Waiting for Location..';
+  let text = "Waiting for Location..";
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
@@ -35,7 +32,6 @@ export const ImageCapturePage = ({ navigation }) => {
   }
 
   const pickImage = async () => {
-
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
     if (status !== "granted") {
@@ -46,27 +42,34 @@ export const ImageCapturePage = ({ navigation }) => {
     const result = await ImagePicker.launchCameraAsync();
 
     if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
+      setImageUri(result.assets[0]);
     }
-    console.log(result.assets);
+    console.log(result.assets[0]);
   };
 
-  const submitPress = () =>{
-    navigation.navigate("AddNewResource",{image: imageUri, location: location} )
-  }
+  const submitPress = () => {
+    navigation.navigate("AddNewResource", {
+      image: imageUri,
+      location: location,
+    });
+  };
 
   return (
     <View style={styles.container}>
-<BackButton/>
+      <BackButton />
       {imageUri && (
         <View style={styles.imageContainer}>
-          <Image source={{ uri: imageUri }} style={styles.image} />
+          <Image source={{ uri: imageUri.uri }} style={styles.image} />
         </View>
       )}
-      <View >
+      <View>
         <Button title="Take a photo" onPress={pickImage} />
-        <Button title="Submit Photo" onPress={submitPress} disabled={!location}/>
-      <Text>{text}</Text>
+        <Button
+          title="Submit Photo"
+          onPress={submitPress}
+          disabled={!location}
+        />
+        <Text>{text}</Text>
       </View>
     </View>
   );
