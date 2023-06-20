@@ -46,6 +46,7 @@ export default function MapPage({ navigation }) {
           resources={displayedResources}
           cardPress={cardPress}
           navigation={navigation}
+          location={targetLocation}
         />
       ) : null}
     </View>

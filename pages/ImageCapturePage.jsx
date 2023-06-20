@@ -39,12 +39,16 @@ export const ImageCapturePage = ({ navigation }) => {
       return;
     }
 
-    const result = await ImagePicker.launchCameraAsync();
+    const result = await ImagePicker.launchCameraAsync(
+      // {base64: true,
+      // quality:1
+      // }
+    );
 
     if (!result.canceled) {
       setImageUri(result.assets[0]);
     }
-    console.log(result.assets[0]);
+    // console.log(result.assets[0]);
   };
 
   const submitPress = () => {
